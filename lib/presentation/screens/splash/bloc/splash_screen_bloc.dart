@@ -18,8 +18,11 @@ class SplashScreenBloc extends BaseCubit<SplashScreenState> {
   SplashScreenBloc() : super(SplashScreenState());
 
   void setUpAppConfiguration(BuildContext context) {
+    print('=== setUpAppConfiguration called ===');
     _setupLocale(context);
+    print('Locale setup completed');
     _loginHardCodeUser();
+    print('Login process initiated');
   }
 
   void _setupLocale(BuildContext context) {
@@ -29,23 +32,44 @@ class SplashScreenBloc extends BaseCubit<SplashScreenState> {
 
   Future<void> _loginHardCodeUser() async {
     try {
+      print('=== Starting hardcoded login ===');
       final loginFunc = serviceLocator.get<Login>();
 
+      print('Calling login API...');
       final res = await loginFunc.call(
         const LoginParams(
-          email: 'vo.khactuyen@gmail.com',
-          password: 'ipc@12Ipc',
+          email: 'markTest@flexosense.com',
+          password: 'newPassword1@',
         ),
       );
 
+      print('Login successful!');
+      print('Access token received: ${res.accessToken.substring(0, 50)}...');
+
       final accessTokenData = JwtDecoder.decode(res.accessToken);
       final userId = accessTokenData['username'];
+      print('User ID extracted: $userId');
 
-      serviceLocator.get<OauthTokenManager>().saveUserId(userId);
-      serviceLocator.get<UpdateDataHandler>().startSyncingData();
+      await serviceLocator.get<OauthTokenManager>().saveUserId(userId);
+      print('User ID saved to secure storage');
 
+      print('Starting data sync...');
+      final updateDataHandler = serviceLocator.get<UpdateDataHandler>();
+      print('UpdateDataHandler retrieved: ${updateDataHandler.runtimeType}');
+      updateDataHandler.startSyncingData();
+      print('Data sync started successfully');
+
+      // Add a small delay to ensure sync is properly initialized
+      await Future.delayed(const Duration(seconds: 2));
+      print('Delay completed, proceeding with app initialization...');
+
+      print('Handling app initialization...');
       AppStateHelper.handleInitialization();
+      print('App initialization completed');
     } catch (error) {
+      print('=== Login failed ===');
+      print('Error: $error');
+      print('Error type: ${error.runtimeType}');
       Log.e('splash_screen_bloc loginHardCodeUser $error');
     }
   }

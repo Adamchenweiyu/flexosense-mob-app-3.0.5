@@ -49,14 +49,15 @@
   "voltage": "Voltage",
   "liveAccelData": "Live Accel data",
   "liveGyrosData": "Live Gyros data",
-  "liveRawPitchYawData": "Live Raw, Pitch, Yaw data",
+
   "liveMagneticData": "Live Magnetic data",
   "livePressureData": "Live Pressure data",
   "viewStoredData": "View stored data",
   "viewStoredAccel": "View stored Accel",
   "viewStoredGyros": "View stored Gyros",
-  "viewStoredRollPitchYaw": "View stored Roll Pitch Yaw",
+
   "viewStoredMagnetic": "View stored Magnetic",
   "viewStoredPressure": "View stored Pressure",
-  "pair": "Pair"
+  "pair": "Pair",
+  "appVersion": "App version"
 }

@@ -5,7 +5,7 @@ import 'package:flex_sense/plugin/device_core/models/device_info.dart';
 import 'package:flex_sense/plugin/device_core/models/error_code.dart';
 import 'package:flex_sense/plugin/device_core/models/imu/accel.dart';
 import 'package:flex_sense/plugin/device_core/models/imu/gyros.dart';
-import 'package:flex_sense/plugin/device_core/models/imu/roll_pitch_yaw.dart';
+
 import 'package:flex_sense/plugin/device_core/models/magnetic.dart';
 import 'package:flex_sense/plugin/device_core/models/pressure.dart';
 import 'package:flex_sense/plugin/device_core/models/timestamp.dart';
@@ -25,7 +25,7 @@ class DeviceDetailState {
   BatteryInfo? batteryInfo;
   List<Accel> accelList;
   List<Gyros> gyrosList;
-  List<RollPitchYaw> rollPitchYawList;
+
   List<Magnetic> magneticList;
   List<double> pressureVoltagesList;
   DeviceDetailGettingLocalData gettingLocalData;
@@ -38,7 +38,6 @@ class DeviceDetailState {
     this.batteryInfo,
     required this.accelList,
     required this.gyrosList,
-    required this.rollPitchYawList,
     required this.magneticList,
     required this.pressureVoltagesList,
     this.gettingLocalData = DeviceDetailGettingLocalData.none,
@@ -52,7 +51,6 @@ class DeviceDetailState {
     BatteryInfo? batteryInfo,
     List<Accel>? accelList,
     List<Gyros>? gyrosList,
-    List<RollPitchYaw>? rollPitchYawList,
     List<Magnetic>? magneticList,
     List<double>? pressureVoltagesList,
     DeviceDetailGettingLocalData? gettingLocalData,
@@ -65,7 +63,6 @@ class DeviceDetailState {
       batteryInfo: batteryInfo ?? this.batteryInfo,
       accelList: accelList ?? this.accelList,
       gyrosList: gyrosList ?? this.gyrosList,
-      rollPitchYawList: rollPitchYawList ?? this.rollPitchYawList,
       magneticList: magneticList ?? this.magneticList,
       pressureVoltagesList: pressureVoltagesList ?? this.pressureVoltagesList,
       gettingLocalData: gettingLocalData ?? this.gettingLocalData,

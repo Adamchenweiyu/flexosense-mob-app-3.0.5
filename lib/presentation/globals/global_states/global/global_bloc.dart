@@ -5,6 +5,7 @@ import 'package:flex_sense/data/di/service_locator.dart';
 import 'package:flex_sense/data/repository/imu_repo/imu_repo.dart';
 import 'package:flex_sense/data/repository/magnetic_repo/magnetic_repo.dart';
 import 'package:flex_sense/data/repository/pressure_repo/pressure_repo.dart';
+import 'package:flex_sense/data/service/database_queue_service.dart';
 import 'package:flex_sense/plugin/device_core/device_core_plugin.dart';
 import 'package:flex_sense/plugin/device_core/device_event_task.dart';
 import 'package:flex_sense/plugin/device_core/enum/event_enum.dart';
@@ -58,24 +59,38 @@ class GlobalBloc extends BaseCubit<GlobalState> {
   }
 
   void _saveImu(DeviceEventTask task) {
-    final newImuList = task.toImuListSave(DateTime.now());
+    final newImuList = task.toImuListSave(task.toTimeStamp().time);
     final newImuEntities = newImuList.map((e) => e.toImuEntityData()).toList();
 
-    serviceLocator.get<ImuRepo>().insertImuDataList(newImuEntities);
+    // Use queue service for safe database operations
+    serviceLocator.get<DatabaseQueueService>().queueImuData(
+      newImuEntities,
+      deviceAddress: newImuList.isNotEmpty ? newImuList.first.address : null,
+    );
   }
 
   void _saveMagnetic(DeviceEventTask task) {
-    final newMagneticList = task.toMagneticListSave(DateTime.now());
+    final newMagneticList = task.toMagneticListSave(task.toTimeStamp().time);
 
     final newMagneticEntities = newMagneticList.map((e) => e.toMagneticEntityData()).toList();
-    serviceLocator.get<MagneticRepo>().insertMagneticDataList(newMagneticEntities);
+    
+    // Use queue service for safe database operations
+    serviceLocator.get<DatabaseQueueService>().queueMagneticData(
+      newMagneticEntities,
+      deviceAddress: newMagneticList.isNotEmpty ? newMagneticList.first.address : null,
+    );
   }
 
   void _savePressure(DeviceEventTask task) {
     final newPressure = task.toPressure();
 
     final newPressureEntity = newPressure.toPressureEntityData();
-    serviceLocator.get<PressureRepo>().insertPressureData(newPressureEntity);
+    
+    // Use queue service for safe database operations
+    serviceLocator.get<DatabaseQueueService>().queuePressureData(
+      newPressureEntity,
+      deviceAddress: newPressure.address,
+    );
   }
 
   void _onDeviceDisconnected(DeviceEventTask task) {

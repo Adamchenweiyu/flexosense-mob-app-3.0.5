@@ -10,13 +10,11 @@ import 'package:flutter/rendering.dart';
 class LivePressureBottomSheet extends StatefulWidget {
   final String? title;
   final List<double> data;
-  final bool isRollPitchYaw;
 
   const LivePressureBottomSheet({
     Key? key,
     this.title,
     required this.data,
-    this.isRollPitchYaw = false,
   }) : super(key: key);
 
   @override

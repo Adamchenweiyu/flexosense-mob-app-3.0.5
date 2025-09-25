@@ -63,14 +63,15 @@ class AppStrings {
   static String get voltage => getLocalization().voltage;
   static String get liveAccelData => getLocalization().liveAccelData;
   static String get liveGyrosData => getLocalization().liveGyrosData;
-  static String get liveRawPitchYawData => getLocalization().liveRawPitchYawData;
+
   static String get liveMagneticData => getLocalization().liveMagneticData;
   static String get livePressureData => getLocalization().livePressureData;
   static String get viewStoredData => getLocalization().viewStoredData;
   static String get viewStoredAccel => getLocalization().viewStoredAccel;
   static String get viewStoredGyros => getLocalization().viewStoredGyros;
-  static String get viewStoredRollPitchYaw => getLocalization().viewStoredRollPitchYaw;
+
   static String get viewStoredMagnetic => getLocalization().viewStoredMagnetic;
   static String get viewStoredPressure => getLocalization().viewStoredPressure;
   static String get pair => getLocalization().pair;
+  static String get appVersion => getLocalization().appVersion;
 }

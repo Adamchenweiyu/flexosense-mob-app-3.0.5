@@ -50,35 +50,15 @@ class $ImuEntityTable extends ImuEntity
   late final GeneratedColumn<int> gyrosZ = GeneratedColumn<int>(
       'gyros_z', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _rollMeta = const VerificationMeta('roll');
+  static const VerificationMeta _msgIndexMeta =
+      const VerificationMeta('msgIndex');
   @override
-  late final GeneratedColumn<double> roll = GeneratedColumn<double>(
-      'roll', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
-  static const VerificationMeta _pitchMeta = const VerificationMeta('pitch');
+  late final GeneratedColumn<int> msgIndex = GeneratedColumn<int>(
+      'msg_index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  late final GeneratedColumn<double> pitch = GeneratedColumn<double>(
-      'pitch', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
-  static const VerificationMeta _yawMeta = const VerificationMeta('yaw');
-  @override
-  late final GeneratedColumn<double> yaw = GeneratedColumn<double>(
-      'yaw', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        deviceAddress,
-        time,
-        accX,
-        accY,
-        accZ,
-        gyrosX,
-        gyrosY,
-        gyrosZ,
-        roll,
-        pitch,
-        yaw
-      ];
+  List<GeneratedColumn> get $columns =>
+      [deviceAddress, time, accX, accY, accZ, gyrosX, gyrosY, gyrosZ, msgIndex];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -139,29 +119,17 @@ class $ImuEntityTable extends ImuEntity
     } else if (isInserting) {
       context.missing(_gyrosZMeta);
     }
-    if (data.containsKey('roll')) {
-      context.handle(
-          _rollMeta, roll.isAcceptableOrUnknown(data['roll']!, _rollMeta));
+    if (data.containsKey('msg_index')) {
+      context.handle(_msgIndexMeta,
+          msgIndex.isAcceptableOrUnknown(data['msg_index']!, _msgIndexMeta));
     } else if (isInserting) {
-      context.missing(_rollMeta);
-    }
-    if (data.containsKey('pitch')) {
-      context.handle(
-          _pitchMeta, pitch.isAcceptableOrUnknown(data['pitch']!, _pitchMeta));
-    } else if (isInserting) {
-      context.missing(_pitchMeta);
-    }
-    if (data.containsKey('yaw')) {
-      context.handle(
-          _yawMeta, yaw.isAcceptableOrUnknown(data['yaw']!, _yawMeta));
-    } else if (isInserting) {
-      context.missing(_yawMeta);
+      context.missing(_msgIndexMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {time};
+  Set<GeneratedColumn> get $primaryKey => {deviceAddress, time};
   @override
   ImuEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -182,12 +150,8 @@ class $ImuEntityTable extends ImuEntity
           .read(DriftSqlType.int, data['${effectivePrefix}gyros_y'])!,
       gyrosZ: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}gyros_z'])!,
-      roll: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}roll'])!,
-      pitch: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}pitch'])!,
-      yaw: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}yaw'])!,
+      msgIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}msg_index'])!,
     );
   }
 
@@ -206,9 +170,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
   final int gyrosX;
   final int gyrosY;
   final int gyrosZ;
-  final double roll;
-  final double pitch;
-  final double yaw;
+  final int msgIndex;
   const ImuEntityData(
       {required this.deviceAddress,
       required this.time,
@@ -218,9 +180,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
       required this.gyrosX,
       required this.gyrosY,
       required this.gyrosZ,
-      required this.roll,
-      required this.pitch,
-      required this.yaw});
+      required this.msgIndex});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -232,9 +192,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
     map['gyros_x'] = Variable<int>(gyrosX);
     map['gyros_y'] = Variable<int>(gyrosY);
     map['gyros_z'] = Variable<int>(gyrosZ);
-    map['roll'] = Variable<double>(roll);
-    map['pitch'] = Variable<double>(pitch);
-    map['yaw'] = Variable<double>(yaw);
+    map['msg_index'] = Variable<int>(msgIndex);
     return map;
   }
 
@@ -248,9 +206,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
       gyrosX: Value(gyrosX),
       gyrosY: Value(gyrosY),
       gyrosZ: Value(gyrosZ),
-      roll: Value(roll),
-      pitch: Value(pitch),
-      yaw: Value(yaw),
+      msgIndex: Value(msgIndex),
     );
   }
 
@@ -266,9 +222,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
       gyrosX: serializer.fromJson<int>(json['gyrosX']),
       gyrosY: serializer.fromJson<int>(json['gyrosY']),
       gyrosZ: serializer.fromJson<int>(json['gyrosZ']),
-      roll: serializer.fromJson<double>(json['roll']),
-      pitch: serializer.fromJson<double>(json['pitch']),
-      yaw: serializer.fromJson<double>(json['yaw']),
+      msgIndex: serializer.fromJson<int>(json['msgIndex']),
     );
   }
   @override
@@ -283,9 +237,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
       'gyrosX': serializer.toJson<int>(gyrosX),
       'gyrosY': serializer.toJson<int>(gyrosY),
       'gyrosZ': serializer.toJson<int>(gyrosZ),
-      'roll': serializer.toJson<double>(roll),
-      'pitch': serializer.toJson<double>(pitch),
-      'yaw': serializer.toJson<double>(yaw),
+      'msgIndex': serializer.toJson<int>(msgIndex),
     };
   }
 
@@ -298,9 +250,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
           int? gyrosX,
           int? gyrosY,
           int? gyrosZ,
-          double? roll,
-          double? pitch,
-          double? yaw}) =>
+          int? msgIndex}) =>
       ImuEntityData(
         deviceAddress: deviceAddress ?? this.deviceAddress,
         time: time ?? this.time,
@@ -310,9 +260,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
         gyrosX: gyrosX ?? this.gyrosX,
         gyrosY: gyrosY ?? this.gyrosY,
         gyrosZ: gyrosZ ?? this.gyrosZ,
-        roll: roll ?? this.roll,
-        pitch: pitch ?? this.pitch,
-        yaw: yaw ?? this.yaw,
+        msgIndex: msgIndex ?? this.msgIndex,
       );
   ImuEntityData copyWithCompanion(ImuEntityCompanion data) {
     return ImuEntityData(
@@ -326,9 +274,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
       gyrosX: data.gyrosX.present ? data.gyrosX.value : this.gyrosX,
       gyrosY: data.gyrosY.present ? data.gyrosY.value : this.gyrosY,
       gyrosZ: data.gyrosZ.present ? data.gyrosZ.value : this.gyrosZ,
-      roll: data.roll.present ? data.roll.value : this.roll,
-      pitch: data.pitch.present ? data.pitch.value : this.pitch,
-      yaw: data.yaw.present ? data.yaw.value : this.yaw,
+      msgIndex: data.msgIndex.present ? data.msgIndex.value : this.msgIndex,
     );
   }
 
@@ -343,16 +289,14 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
           ..write('gyrosX: $gyrosX, ')
           ..write('gyrosY: $gyrosY, ')
           ..write('gyrosZ: $gyrosZ, ')
-          ..write('roll: $roll, ')
-          ..write('pitch: $pitch, ')
-          ..write('yaw: $yaw')
+          ..write('msgIndex: $msgIndex')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(deviceAddress, time, accX, accY, accZ, gyrosX,
-      gyrosY, gyrosZ, roll, pitch, yaw);
+  int get hashCode => Object.hash(
+      deviceAddress, time, accX, accY, accZ, gyrosX, gyrosY, gyrosZ, msgIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -365,9 +309,7 @@ class ImuEntityData extends DataClass implements Insertable<ImuEntityData> {
           other.gyrosX == this.gyrosX &&
           other.gyrosY == this.gyrosY &&
           other.gyrosZ == this.gyrosZ &&
-          other.roll == this.roll &&
-          other.pitch == this.pitch &&
-          other.yaw == this.yaw);
+          other.msgIndex == this.msgIndex);
 }
 
 class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
@@ -379,9 +321,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
   final Value<int> gyrosX;
   final Value<int> gyrosY;
   final Value<int> gyrosZ;
-  final Value<double> roll;
-  final Value<double> pitch;
-  final Value<double> yaw;
+  final Value<int> msgIndex;
   final Value<int> rowid;
   const ImuEntityCompanion({
     this.deviceAddress = const Value.absent(),
@@ -392,9 +332,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
     this.gyrosX = const Value.absent(),
     this.gyrosY = const Value.absent(),
     this.gyrosZ = const Value.absent(),
-    this.roll = const Value.absent(),
-    this.pitch = const Value.absent(),
-    this.yaw = const Value.absent(),
+    this.msgIndex = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ImuEntityCompanion.insert({
@@ -406,9 +344,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
     required int gyrosX,
     required int gyrosY,
     required int gyrosZ,
-    required double roll,
-    required double pitch,
-    required double yaw,
+    required int msgIndex,
     this.rowid = const Value.absent(),
   })  : deviceAddress = Value(deviceAddress),
         time = Value(time),
@@ -418,9 +354,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
         gyrosX = Value(gyrosX),
         gyrosY = Value(gyrosY),
         gyrosZ = Value(gyrosZ),
-        roll = Value(roll),
-        pitch = Value(pitch),
-        yaw = Value(yaw);
+        msgIndex = Value(msgIndex);
   static Insertable<ImuEntityData> custom({
     Expression<String>? deviceAddress,
     Expression<DateTime>? time,
@@ -430,9 +364,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
     Expression<int>? gyrosX,
     Expression<int>? gyrosY,
     Expression<int>? gyrosZ,
-    Expression<double>? roll,
-    Expression<double>? pitch,
-    Expression<double>? yaw,
+    Expression<int>? msgIndex,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -444,9 +376,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
       if (gyrosX != null) 'gyros_x': gyrosX,
       if (gyrosY != null) 'gyros_y': gyrosY,
       if (gyrosZ != null) 'gyros_z': gyrosZ,
-      if (roll != null) 'roll': roll,
-      if (pitch != null) 'pitch': pitch,
-      if (yaw != null) 'yaw': yaw,
+      if (msgIndex != null) 'msg_index': msgIndex,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -460,9 +390,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
       Value<int>? gyrosX,
       Value<int>? gyrosY,
       Value<int>? gyrosZ,
-      Value<double>? roll,
-      Value<double>? pitch,
-      Value<double>? yaw,
+      Value<int>? msgIndex,
       Value<int>? rowid}) {
     return ImuEntityCompanion(
       deviceAddress: deviceAddress ?? this.deviceAddress,
@@ -473,9 +401,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
       gyrosX: gyrosX ?? this.gyrosX,
       gyrosY: gyrosY ?? this.gyrosY,
       gyrosZ: gyrosZ ?? this.gyrosZ,
-      roll: roll ?? this.roll,
-      pitch: pitch ?? this.pitch,
-      yaw: yaw ?? this.yaw,
+      msgIndex: msgIndex ?? this.msgIndex,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -507,14 +433,8 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
     if (gyrosZ.present) {
       map['gyros_z'] = Variable<int>(gyrosZ.value);
     }
-    if (roll.present) {
-      map['roll'] = Variable<double>(roll.value);
-    }
-    if (pitch.present) {
-      map['pitch'] = Variable<double>(pitch.value);
-    }
-    if (yaw.present) {
-      map['yaw'] = Variable<double>(yaw.value);
+    if (msgIndex.present) {
+      map['msg_index'] = Variable<int>(msgIndex.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -533,9 +453,7 @@ class ImuEntityCompanion extends UpdateCompanion<ImuEntityData> {
           ..write('gyrosX: $gyrosX, ')
           ..write('gyrosY: $gyrosY, ')
           ..write('gyrosZ: $gyrosZ, ')
-          ..write('roll: $roll, ')
-          ..write('pitch: $pitch, ')
-          ..write('yaw: $yaw, ')
+          ..write('msgIndex: $msgIndex, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1585,8 +1503,15 @@ class $MagneticEntityTable extends MagneticEntity
   late final GeneratedColumn<String> deviceAddress = GeneratedColumn<String>(
       'device_address', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _msgIndexMeta =
+      const VerificationMeta('msgIndex');
   @override
-  List<GeneratedColumn> get $columns => [time, x, y, z, deviceAddress];
+  late final GeneratedColumn<int> msgIndex = GeneratedColumn<int>(
+      'msg_index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [time, x, y, z, deviceAddress, msgIndex];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1626,11 +1551,17 @@ class $MagneticEntityTable extends MagneticEntity
     } else if (isInserting) {
       context.missing(_deviceAddressMeta);
     }
+    if (data.containsKey('msg_index')) {
+      context.handle(_msgIndexMeta,
+          msgIndex.isAcceptableOrUnknown(data['msg_index']!, _msgIndexMeta));
+    } else if (isInserting) {
+      context.missing(_msgIndexMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {time};
+  Set<GeneratedColumn> get $primaryKey => {deviceAddress, time};
   @override
   MagneticEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1645,6 +1576,8 @@ class $MagneticEntityTable extends MagneticEntity
           .read(DriftSqlType.int, data['${effectivePrefix}z'])!,
       deviceAddress: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}device_address'])!,
+      msgIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}msg_index'])!,
     );
   }
 
@@ -1661,12 +1594,14 @@ class MagneticEntityData extends DataClass
   final int y;
   final int z;
   final String deviceAddress;
+  final int msgIndex;
   const MagneticEntityData(
       {required this.time,
       required this.x,
       required this.y,
       required this.z,
-      required this.deviceAddress});
+      required this.deviceAddress,
+      required this.msgIndex});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1675,6 +1610,7 @@ class MagneticEntityData extends DataClass
     map['y'] = Variable<int>(y);
     map['z'] = Variable<int>(z);
     map['device_address'] = Variable<String>(deviceAddress);
+    map['msg_index'] = Variable<int>(msgIndex);
     return map;
   }
 
@@ -1685,6 +1621,7 @@ class MagneticEntityData extends DataClass
       y: Value(y),
       z: Value(z),
       deviceAddress: Value(deviceAddress),
+      msgIndex: Value(msgIndex),
     );
   }
 
@@ -1697,6 +1634,7 @@ class MagneticEntityData extends DataClass
       y: serializer.fromJson<int>(json['y']),
       z: serializer.fromJson<int>(json['z']),
       deviceAddress: serializer.fromJson<String>(json['deviceAddress']),
+      msgIndex: serializer.fromJson<int>(json['msgIndex']),
     );
   }
   @override
@@ -1708,17 +1646,24 @@ class MagneticEntityData extends DataClass
       'y': serializer.toJson<int>(y),
       'z': serializer.toJson<int>(z),
       'deviceAddress': serializer.toJson<String>(deviceAddress),
+      'msgIndex': serializer.toJson<int>(msgIndex),
     };
   }
 
   MagneticEntityData copyWith(
-          {DateTime? time, int? x, int? y, int? z, String? deviceAddress}) =>
+          {DateTime? time,
+          int? x,
+          int? y,
+          int? z,
+          String? deviceAddress,
+          int? msgIndex}) =>
       MagneticEntityData(
         time: time ?? this.time,
         x: x ?? this.x,
         y: y ?? this.y,
         z: z ?? this.z,
         deviceAddress: deviceAddress ?? this.deviceAddress,
+        msgIndex: msgIndex ?? this.msgIndex,
       );
   MagneticEntityData copyWithCompanion(MagneticEntityCompanion data) {
     return MagneticEntityData(
@@ -1729,6 +1674,7 @@ class MagneticEntityData extends DataClass
       deviceAddress: data.deviceAddress.present
           ? data.deviceAddress.value
           : this.deviceAddress,
+      msgIndex: data.msgIndex.present ? data.msgIndex.value : this.msgIndex,
     );
   }
 
@@ -1739,13 +1685,14 @@ class MagneticEntityData extends DataClass
           ..write('x: $x, ')
           ..write('y: $y, ')
           ..write('z: $z, ')
-          ..write('deviceAddress: $deviceAddress')
+          ..write('deviceAddress: $deviceAddress, ')
+          ..write('msgIndex: $msgIndex')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(time, x, y, z, deviceAddress);
+  int get hashCode => Object.hash(time, x, y, z, deviceAddress, msgIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1754,7 +1701,8 @@ class MagneticEntityData extends DataClass
           other.x == this.x &&
           other.y == this.y &&
           other.z == this.z &&
-          other.deviceAddress == this.deviceAddress);
+          other.deviceAddress == this.deviceAddress &&
+          other.msgIndex == this.msgIndex);
 }
 
 class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
@@ -1763,6 +1711,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
   final Value<int> y;
   final Value<int> z;
   final Value<String> deviceAddress;
+  final Value<int> msgIndex;
   final Value<int> rowid;
   const MagneticEntityCompanion({
     this.time = const Value.absent(),
@@ -1770,6 +1719,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
     this.y = const Value.absent(),
     this.z = const Value.absent(),
     this.deviceAddress = const Value.absent(),
+    this.msgIndex = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MagneticEntityCompanion.insert({
@@ -1778,18 +1728,21 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
     required int y,
     required int z,
     required String deviceAddress,
+    required int msgIndex,
     this.rowid = const Value.absent(),
   })  : time = Value(time),
         x = Value(x),
         y = Value(y),
         z = Value(z),
-        deviceAddress = Value(deviceAddress);
+        deviceAddress = Value(deviceAddress),
+        msgIndex = Value(msgIndex);
   static Insertable<MagneticEntityData> custom({
     Expression<DateTime>? time,
     Expression<int>? x,
     Expression<int>? y,
     Expression<int>? z,
     Expression<String>? deviceAddress,
+    Expression<int>? msgIndex,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1798,6 +1751,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
       if (y != null) 'y': y,
       if (z != null) 'z': z,
       if (deviceAddress != null) 'device_address': deviceAddress,
+      if (msgIndex != null) 'msg_index': msgIndex,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1808,6 +1762,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
       Value<int>? y,
       Value<int>? z,
       Value<String>? deviceAddress,
+      Value<int>? msgIndex,
       Value<int>? rowid}) {
     return MagneticEntityCompanion(
       time: time ?? this.time,
@@ -1815,6 +1770,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
       y: y ?? this.y,
       z: z ?? this.z,
       deviceAddress: deviceAddress ?? this.deviceAddress,
+      msgIndex: msgIndex ?? this.msgIndex,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1837,6 +1793,9 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
     if (deviceAddress.present) {
       map['device_address'] = Variable<String>(deviceAddress.value);
     }
+    if (msgIndex.present) {
+      map['msg_index'] = Variable<int>(msgIndex.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1851,6 +1810,7 @@ class MagneticEntityCompanion extends UpdateCompanion<MagneticEntityData> {
           ..write('y: $y, ')
           ..write('z: $z, ')
           ..write('deviceAddress: $deviceAddress, ')
+          ..write('msgIndex: $msgIndex, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2375,9 +2335,7 @@ typedef $$ImuEntityTableCreateCompanionBuilder = ImuEntityCompanion Function({
   required int gyrosX,
   required int gyrosY,
   required int gyrosZ,
-  required double roll,
-  required double pitch,
-  required double yaw,
+  required int msgIndex,
   Value<int> rowid,
 });
 typedef $$ImuEntityTableUpdateCompanionBuilder = ImuEntityCompanion Function({
@@ -2389,9 +2347,7 @@ typedef $$ImuEntityTableUpdateCompanionBuilder = ImuEntityCompanion Function({
   Value<int> gyrosX,
   Value<int> gyrosY,
   Value<int> gyrosZ,
-  Value<double> roll,
-  Value<double> pitch,
-  Value<double> yaw,
+  Value<int> msgIndex,
   Value<int> rowid,
 });
 
@@ -2428,14 +2384,8 @@ class $$ImuEntityTableFilterComposer
   ColumnFilters<int> get gyrosZ => $composableBuilder(
       column: $table.gyrosZ, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get roll => $composableBuilder(
-      column: $table.roll, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<double> get pitch => $composableBuilder(
-      column: $table.pitch, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<double> get yaw => $composableBuilder(
-      column: $table.yaw, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get msgIndex => $composableBuilder(
+      column: $table.msgIndex, builder: (column) => ColumnFilters(column));
 }
 
 class $$ImuEntityTableOrderingComposer
@@ -2472,14 +2422,8 @@ class $$ImuEntityTableOrderingComposer
   ColumnOrderings<int> get gyrosZ => $composableBuilder(
       column: $table.gyrosZ, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get roll => $composableBuilder(
-      column: $table.roll, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<double> get pitch => $composableBuilder(
-      column: $table.pitch, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<double> get yaw => $composableBuilder(
-      column: $table.yaw, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get msgIndex => $composableBuilder(
+      column: $table.msgIndex, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ImuEntityTableAnnotationComposer
@@ -2515,14 +2459,8 @@ class $$ImuEntityTableAnnotationComposer
   GeneratedColumn<int> get gyrosZ =>
       $composableBuilder(column: $table.gyrosZ, builder: (column) => column);
 
-  GeneratedColumn<double> get roll =>
-      $composableBuilder(column: $table.roll, builder: (column) => column);
-
-  GeneratedColumn<double> get pitch =>
-      $composableBuilder(column: $table.pitch, builder: (column) => column);
-
-  GeneratedColumn<double> get yaw =>
-      $composableBuilder(column: $table.yaw, builder: (column) => column);
+  GeneratedColumn<int> get msgIndex =>
+      $composableBuilder(column: $table.msgIndex, builder: (column) => column);
 }
 
 class $$ImuEntityTableTableManager extends RootTableManager<
@@ -2559,9 +2497,7 @@ class $$ImuEntityTableTableManager extends RootTableManager<
             Value<int> gyrosX = const Value.absent(),
             Value<int> gyrosY = const Value.absent(),
             Value<int> gyrosZ = const Value.absent(),
-            Value<double> roll = const Value.absent(),
-            Value<double> pitch = const Value.absent(),
-            Value<double> yaw = const Value.absent(),
+            Value<int> msgIndex = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ImuEntityCompanion(
@@ -2573,9 +2509,7 @@ class $$ImuEntityTableTableManager extends RootTableManager<
             gyrosX: gyrosX,
             gyrosY: gyrosY,
             gyrosZ: gyrosZ,
-            roll: roll,
-            pitch: pitch,
-            yaw: yaw,
+            msgIndex: msgIndex,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -2587,9 +2521,7 @@ class $$ImuEntityTableTableManager extends RootTableManager<
             required int gyrosX,
             required int gyrosY,
             required int gyrosZ,
-            required double roll,
-            required double pitch,
-            required double yaw,
+            required int msgIndex,
             Value<int> rowid = const Value.absent(),
           }) =>
               ImuEntityCompanion.insert(
@@ -2601,9 +2533,7 @@ class $$ImuEntityTableTableManager extends RootTableManager<
             gyrosX: gyrosX,
             gyrosY: gyrosY,
             gyrosZ: gyrosZ,
-            roll: roll,
-            pitch: pitch,
-            yaw: yaw,
+            msgIndex: msgIndex,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -3184,6 +3114,7 @@ typedef $$MagneticEntityTableCreateCompanionBuilder = MagneticEntityCompanion
   required int y,
   required int z,
   required String deviceAddress,
+  required int msgIndex,
   Value<int> rowid,
 });
 typedef $$MagneticEntityTableUpdateCompanionBuilder = MagneticEntityCompanion
@@ -3193,6 +3124,7 @@ typedef $$MagneticEntityTableUpdateCompanionBuilder = MagneticEntityCompanion
   Value<int> y,
   Value<int> z,
   Value<String> deviceAddress,
+  Value<int> msgIndex,
   Value<int> rowid,
 });
 
@@ -3219,6 +3151,9 @@ class $$MagneticEntityTableFilterComposer
 
   ColumnFilters<String> get deviceAddress => $composableBuilder(
       column: $table.deviceAddress, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get msgIndex => $composableBuilder(
+      column: $table.msgIndex, builder: (column) => ColumnFilters(column));
 }
 
 class $$MagneticEntityTableOrderingComposer
@@ -3245,6 +3180,9 @@ class $$MagneticEntityTableOrderingComposer
   ColumnOrderings<String> get deviceAddress => $composableBuilder(
       column: $table.deviceAddress,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get msgIndex => $composableBuilder(
+      column: $table.msgIndex, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MagneticEntityTableAnnotationComposer
@@ -3270,6 +3208,9 @@ class $$MagneticEntityTableAnnotationComposer
 
   GeneratedColumn<String> get deviceAddress => $composableBuilder(
       column: $table.deviceAddress, builder: (column) => column);
+
+  GeneratedColumn<int> get msgIndex =>
+      $composableBuilder(column: $table.msgIndex, builder: (column) => column);
 }
 
 class $$MagneticEntityTableTableManager extends RootTableManager<
@@ -3304,6 +3245,7 @@ class $$MagneticEntityTableTableManager extends RootTableManager<
             Value<int> y = const Value.absent(),
             Value<int> z = const Value.absent(),
             Value<String> deviceAddress = const Value.absent(),
+            Value<int> msgIndex = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MagneticEntityCompanion(
@@ -3312,6 +3254,7 @@ class $$MagneticEntityTableTableManager extends RootTableManager<
             y: y,
             z: z,
             deviceAddress: deviceAddress,
+            msgIndex: msgIndex,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -3320,6 +3263,7 @@ class $$MagneticEntityTableTableManager extends RootTableManager<
             required int y,
             required int z,
             required String deviceAddress,
+            required int msgIndex,
             Value<int> rowid = const Value.absent(),
           }) =>
               MagneticEntityCompanion.insert(
@@ -3328,6 +3272,7 @@ class $$MagneticEntityTableTableManager extends RootTableManager<
             y: y,
             z: z,
             deviceAddress: deviceAddress,
+            msgIndex: msgIndex,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

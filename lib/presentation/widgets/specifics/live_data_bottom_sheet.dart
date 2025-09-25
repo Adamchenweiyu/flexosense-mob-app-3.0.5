@@ -10,13 +10,11 @@ import 'package:flutter/rendering.dart';
 class LiveDataBottomSheet extends StatefulWidget {
   final String? title;
   final List<dynamic> data;
-  final bool isRollPitchYaw;
 
   const LiveDataBottomSheet({
     Key? key,
     this.title,
     required this.data,
-    this.isRollPitchYaw = false,
   }) : super(key: key);
 
   @override
@@ -126,7 +124,7 @@ class _LiveDataBottomSheetState extends State<LiveDataBottomSheet> {
             final element = _data[index];
             return ListTile(
               title: Text(
-                'X: ${widget.isRollPitchYaw ? element.roll : element.x}, Y: ${widget.isRollPitchYaw ? element.pitch : element.y}, Z: ${widget.isRollPitchYaw ? element.yaw : element.z}',
+                'X: ${element.x}, Y: ${element.y}, Z: ${element.z}',
                 style: AppTextStyles.regular(color: AppColors.black1, fontSize: AppFontSize.s16),
               ),
             );

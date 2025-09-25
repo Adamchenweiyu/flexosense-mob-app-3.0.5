@@ -14,13 +14,11 @@ import 'package:to_csv/to_csv.dart' as exportCSV;
 class StoredDataBottomSheet extends StatefulWidget {
   final String? title;
   final List<ImuEntityData> data;
-  final bool isRollPitchYaw;
 
   const StoredDataBottomSheet({
     Key? key,
     this.title,
     required this.data,
-    this.isRollPitchYaw = false,
   }) : super(key: key);
 
   @override
@@ -36,9 +34,6 @@ class _StoredDataBottomSheetState extends State<StoredDataBottomSheet> {
     'GyrosX',
     'GyrosY',
     'GyrosZ',
-    'Roll',
-    'Pitch',
-    'Yaw',
   ];
   var _isDeleting = false;
   var _isExportingAll = false;
@@ -56,9 +51,6 @@ class _StoredDataBottomSheetState extends State<StoredDataBottomSheet> {
         element.gyrosX.toString(),
         element.gyrosY.toString(),
         element.gyrosZ.toString(),
-        element.roll.toString(),
-        element.pitch.toString(),
-        element.yaw.toString(),
       ];
 
       listOfLists.add(list);
@@ -159,8 +151,7 @@ class _StoredDataBottomSheetState extends State<StoredDataBottomSheet> {
                   final imu = widget.data[index];
                   return ListTile(
                     title: Text(
-                      '''Time: ${imu.time}\nAccX: ${imu.accX}, AccY: ${imu.accY}, AccZ: ${imu.accZ},\nGyrosX: ${imu.gyrosX}, GyrosY: ${imu.gyrosY}, GyrosZ: ${imu.gyrosZ},\nRoll: ${imu.roll}\nPitch: ${imu.pitch}\nYaw: ${imu.yaw},
-                      ''',
+                      '''Time: ${imu.time}\nAccX: ${imu.accX}, AccY: ${imu.accY}, AccZ: ${imu.accZ},\nGyrosX: ${imu.gyrosX}, GyrosY: ${imu.gyrosY}, GyrosZ: ${imu.gyrosZ}''',
                       style: AppTextStyles.regular(
                         color: AppColors.black1,
                         fontSize: AppFontSize.s16,

@@ -16,6 +16,7 @@ import 'package:flex_sense/application/resource/images/app_images.dart';
 import 'package:flex_sense/application/resource/strings/app_strings.dart';
 import 'package:flex_sense/application/resource/styles/app_text_style.dart';
 import 'package:flex_sense/application/resource/value_manager.dart';
+import 'package:flex_sense/application/util/app_version_utils.dart';
 import 'package:flex_sense/presentation/widgets/specifics/live_pressure_bottom_sheet.dart';
 import 'package:flex_sense/presentation/widgets/specifics/stored_data_bottom_sheet.dart';
 import 'package:flex_sense/presentation/widgets/specifics/stored_magnetic_bottom_sheet.dart';
@@ -23,7 +24,6 @@ import 'package:flex_sense/presentation/widgets/specifics/stored_pressure_bottom
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class DeviceDetailScreen extends StatefulWidget {
   const DeviceDetailScreen({super.key});
@@ -36,7 +36,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   final _bloc = serviceLocator.get<DeviceDetailBloc>();
   var inited = false;
   late ConnectedDevice _device;
-  
+
   bool _isStudyStarted = false;
 
   @override
@@ -45,10 +45,12 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       _device = ModalRoute.of(context)!.settings.arguments as ConnectedDevice;
       _bloc.initState(_device);
       inited = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         setState(() {
           _isStudyStarted = true;
         });
+        _bloc.setTimeStamp(DateTime.now());
+        await Future.delayed(const Duration(milliseconds: 100));
         _bloc.setStartStopStudy(true);
       });
     }
@@ -111,7 +113,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           title: AppStrings.errorCode,
           message: '${AppStrings.imuSensor}: ${state.errorCode?.imuSensor ?? '-'}\n ' +
               '${AppStrings.magSensor}: ${state.errorCode?.magSensor ?? '-'}\n ' +
-              '${AppStrings.batteryMonitor}: ${state.errorCode?.batteryMonitor ?? '-'}\n ' + 
+              '${AppStrings.batteryMonitor}: ${state.errorCode?.batteryMonitor ?? '-'}\n ' +
               '${AppStrings.pressureSensor}: ${state.errorCode?.pressureSensor ?? '-'}\n ' +
               '${AppStrings.wrongSide}: ${state.errorCode?.wrongSide ?? '-'}\n ',
           positiveButtonText: AppStrings.ok,
@@ -182,7 +184,14 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           body: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _buildMethod(),
+            child: Column(
+              children: [
+                _buildAppVersionLabel(),
+                Expanded(
+                  child: _buildMethod(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -197,8 +206,43 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       ),
       titleWidget: Text(
         AppStrings.deviceDetail,
-        style: AppTextStyles.semiBold(color: AppColors.blackSecondary, fontSize: AppFontSize.s20),
+        style: AppTextStyles.semiBold(
+            color: AppColors.blackSecondary, fontSize: AppFontSize.s20),
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildAppVersionLabel() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.semanticGreen.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: AppColors.semanticGreen.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.info_outline,
+            color: AppColors.semanticGreen,
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${AppStrings.appVersion}: ${AppVersionUtils.getAppVersion()}',
+            style: AppTextStyles.medium(
+              color: AppColors.semanticGreen,
+              fontSize: AppFontSize.s14,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -265,10 +309,6 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         onPressed: _onPressLiveGyrosData,
       ),
       const SizedBox(height: 16),
-      FilledButtonApp(
-        label: AppStrings.liveRawPitchYawData,
-        onPressed: _onPressLiveRollPitchYawData,
-      ),
       const SizedBox(height: 16),
       FilledButtonApp(
         label: AppStrings.liveMagneticData,
@@ -350,32 +390,6 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     );
   }
 
-  void _onPressLiveRollPitchYawData() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      builder: (_) => FractionallySizedBox(
-        heightFactor: 0.92,
-        child: BlocProvider.value(
-          value: _bloc,
-          child: DeviceDetailRollPitchYawSelector(
-            builder: (data) => LiveDataBottomSheet(
-              title: AppStrings.liveRawPitchYawData,
-              data: data,
-              isRollPitchYaw: true,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void _onPressLiveMagneticData() {
     showModalBottomSheet(
       context: context,
@@ -439,7 +453,8 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       builder: (isLoading) => Stack(
         children: [
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.semanticGreen),
+            style: FilledButton.styleFrom(
+                backgroundColor: AppColors.semanticGreen),
             onPressed: _onPressViewStoredImu,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -491,7 +506,8 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       builder: (isLoading) => Stack(
         children: [
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.semanticGreen),
+            style: FilledButton.styleFrom(
+                backgroundColor: AppColors.semanticGreen),
             onPressed: _onPressViewStoredMagnetic,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -539,11 +555,12 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildViewStoredPressure() {
-    return DeviceDetailViewStoredPressureSelector(builder: 
-      (isLoading) => Stack(
+    return DeviceDetailViewStoredPressureSelector(
+      builder: (isLoading) => Stack(
         children: [
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.semanticGreen),
+            style: FilledButton.styleFrom(
+                backgroundColor: AppColors.semanticGreen),
             onPressed: _onPressViewStoredPressure,
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:flex_sense/application/util/date_time_utils.dart';
-import 'package:flex_sense/application/util/pressure_utils.dart';
+
 import 'package:flex_sense/data/data_source/local/drift/app_database.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,15 +11,13 @@ class CsvUtils {
     final headers = [
       'DeviceAddress',
       'Time',
+      'MsgIndex',
       'AccX',
       'AccY',
       'AccZ',
       'GyrosX',
       'GyrosY',
       'GyrosZ',
-      'Roll',
-      'Pitch',
-      'Yaw',
     ];
 
     List<List<dynamic>> listOfLists = [];
@@ -31,15 +29,13 @@ class CsvUtils {
       final list = [
         element.deviceAddress,
         element.time.toString(),
+        element.msgIndex.toString(),
         element.accX.toString(),
         element.accY.toString(),
         element.accZ.toString(),
         element.gyrosX.toString(),
         element.gyrosY.toString(),
         element.gyrosZ.toString(),
-        element.roll.toString(),
-        element.pitch.toString(),
-        element.yaw.toString(),
       ];
 
       listOfLists.add(list);
@@ -62,6 +58,7 @@ class CsvUtils {
     final headers = [
       'DeviceAddress',
       'Time',
+      'MsgIndex',
       'MagneticX',
       'MagneticY',
       'MagneticZ',
@@ -76,6 +73,7 @@ class CsvUtils {
       final list = [
         element.deviceAddress,
         element.time.toString(),
+        element.msgIndex.toString(),
         element.x.toString(),
         element.y.toString(),
         element.z.toString(),

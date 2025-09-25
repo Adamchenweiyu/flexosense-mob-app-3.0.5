@@ -138,11 +138,8 @@ class DeviceCoreEventPlugin : FlutterPlugin,
                 "y" to imuData.gyroData.y,
                 "z" to imuData.gyroData.z
             ),
-            "rollPitchYaw" to mapOf(
-                "roll" to imuData.rollPitchYaw.roll,
-                "pitch" to imuData.rollPitchYaw.pitch,
-                "yaw" to imuData.rollPitchYaw.yaw
-            ),
+            "epoch" to imuData.epochTime,
+            "msgIndex" to imuData.msgIndex,
         )
 
         eventHandler.send(DeviceCoreEventTask(DeviceCoreEvent.ON_IMU_NOTIFIED.value, map))
@@ -153,7 +150,9 @@ class DeviceCoreEventPlugin : FlutterPlugin,
             "address" to handler.getDevice().getAddress(),
             "x" to magneticData.x,
             "y" to magneticData.y,
-            "z" to magneticData.z
+            "z" to magneticData.z,
+            "epoch" to magneticData.epochTime,
+            "msgIndex" to magneticData.msgIndex,
         )
 
         eventHandler.send(DeviceCoreEventTask(DeviceCoreEvent.ON_MAG_NOTIFIED.value, map))

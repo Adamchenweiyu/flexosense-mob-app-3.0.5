@@ -1,7 +1,7 @@
 import 'package:flex_sense/plugin/device_core/models/imu/accel.dart';
 import 'package:flex_sense/plugin/device_core/models/imu/gyros.dart';
 import 'package:flex_sense/plugin/device_core/models/magnetic.dart';
-import 'package:flex_sense/plugin/device_core/models/imu/roll_pitch_yaw.dart';
+
 import 'package:flex_sense/plugin/device_core/models/pressure.dart';
 import 'package:flex_sense/presentation/screens/device_detail/bloc/device_detail_bloc.dart';
 import 'package:flex_sense/presentation/screens/device_detail/bloc/device_detail_state.dart';
@@ -30,16 +30,7 @@ class DeviceDetailGyrosSelector
         );
 }
 
-class DeviceDetailRollPitchYawSelector
-    extends BlocSelector<DeviceDetailBloc, DeviceDetailState, List<RollPitchYaw>> {
-  DeviceDetailRollPitchYawSelector({
-    super.key,
-    required Widget Function(List<RollPitchYaw> rollPitchYaws) builder,
-  }) : super(
-          selector: (state) => state.rollPitchYawList,
-          builder: (_, state) => builder(state),
-        );
-}
+
 
 class DeviceDetailMagneticSelector
     extends BlocSelector<DeviceDetailBloc, DeviceDetailState, List<Magnetic>> {

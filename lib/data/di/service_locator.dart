@@ -15,6 +15,8 @@ import 'package:flex_sense/data/repository/pressure_repo/pressure_repo.dart';
 import 'package:flex_sense/data/repository/pressure_repo/pressure_repo_impl.dart';
 import 'package:flex_sense/data/repository/upload_repo/upload_repo.dart';
 import 'package:flex_sense/data/repository/upload_repo/upload_repo_impl.dart';
+import 'package:flex_sense/data/service/database_monitor_service.dart';
+import 'package:flex_sense/data/service/database_queue_service.dart';
 import 'package:flex_sense/data/service/oauth_token_manager/oauth_token_manager.dart';
 import 'package:flex_sense/data/service/oauth_token_manager/oauth_token_manager.default.dart';
 import 'package:flex_sense/domain/use_case/auth/login.dart';
@@ -34,6 +36,7 @@ final serviceLocator = GetIt.instance;
 
 FutureOr<void> injectDependencies() async {
   _registerDataSources();
+  _registerServices();
   _registerRepositories();
   _registerUseCases();
   _registerStates();
@@ -67,6 +70,16 @@ void _registerDataSources() {
 
   serviceLocator.registerSingleton<SharedPref>(
     SharedPref(),
+  );
+}
+
+void _registerServices() {
+  serviceLocator.registerLazySingleton<DatabaseQueueService>(
+    () => DatabaseQueueService(),
+  );
+
+  serviceLocator.registerLazySingleton<DatabaseMonitorService>(
+    () => DatabaseMonitorService(),
   );
 }
 
