@@ -40,11 +40,11 @@ object ReceiveDataHandler {
             /** Notifications */
 
             CommandCode.IMU_DATA_NOTIFY -> {
-                ImuNotifiedHandler.handle(packet.data, handler)
+                ImuNotifiedHandler.handle(packet.data, handler, packet.header.msgIndex)
             }
 
             CommandCode.MAG_DATA_NOTIFY -> {
-                MagNotifiedHandler.handle(packet.data, handler)
+                MagNotifiedHandler.handle(packet.data, handler, packet.header.msgIndex)
             }
 
             CommandCode.PRESSURE_NOTIFY -> {

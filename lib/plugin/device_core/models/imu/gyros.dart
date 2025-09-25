@@ -18,7 +18,7 @@ class Gyros {
     for (var i = 0; i < map['x'].length; i++) {
       final gyros = Gyros(
         address: map['address'],
-        time: DateTime.now(),
+        time: map['epoch'],
         x: map['x'][i],
         y: map['y'][i],
         z: map['z'][i],

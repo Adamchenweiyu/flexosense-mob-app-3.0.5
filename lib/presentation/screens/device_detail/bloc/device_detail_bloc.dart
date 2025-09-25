@@ -19,7 +19,6 @@ class DeviceDetailBloc extends BaseCubit<DeviceDetailState> {
       : super(DeviceDetailState(
           accelList: [],
           gyrosList: [],
-          rollPitchYawList: [],
           magneticList: [],
           pressureVoltagesList: [],
         ));
@@ -142,15 +141,13 @@ class DeviceDetailBloc extends BaseCubit<DeviceDetailState> {
   }
 
   void _updateImu(DeviceEventTask task) {
-    final newImuList = task.toImuListView(DateTime.now());
+    final newImuList = task.toImuListView(task.toTimeStamp().time);
 
     final newAccList = newImuList.map((e) => e.accel).toList();
     final newGyrosList = newImuList.map((e) => e.gyros).toList();
-    final newRollPitchYawList = newImuList.map((e) => e.rollPitchYaw).toList();
 
     final accList = [...state.accelList, ...newAccList];
     final gyrosList = [...state.gyrosList, ...newGyrosList];
-    final rollPitchYawList = [...state.rollPitchYawList, ...newRollPitchYawList];
 
     // Ensure the list does not exceed the maximum size
     if (accList.length > _maxDataSize) {
@@ -165,21 +162,14 @@ class DeviceDetailBloc extends BaseCubit<DeviceDetailState> {
       gyrosList.removeRange(0, itemsToRemove);
     }
 
-    if (rollPitchYawList.length > _maxDataSize) {
-      // Remove elements from the beginning
-      int itemsToRemove = rollPitchYawList.length - _maxDataSize;
-      rollPitchYawList.removeRange(0, itemsToRemove);
-    }
-
     emit(state.copyWith(
       accelList: accList,
       gyrosList: gyrosList,
-      rollPitchYawList: rollPitchYawList,
     ));
   }
 
   void _updateMagnetic(DeviceEventTask task) {
-    final newMagneticList = task.toMagneticListView(DateTime.now());
+    final newMagneticList = task.toMagneticListView(task.toTimeStamp().time);
     final magneticList = [...state.magneticList, ...newMagneticList];
 
     // Ensure the list does not exceed the maximum size

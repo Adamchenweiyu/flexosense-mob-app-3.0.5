@@ -8,6 +8,8 @@ class MagneticEntity extends Table {
 
   TextColumn get deviceAddress => text()();
 
+  IntColumn get msgIndex => integer()();
+
   @override
-  Set<Column> get primaryKey => {time};
+  Set<Column> get primaryKey => {deviceAddress, time};
 }

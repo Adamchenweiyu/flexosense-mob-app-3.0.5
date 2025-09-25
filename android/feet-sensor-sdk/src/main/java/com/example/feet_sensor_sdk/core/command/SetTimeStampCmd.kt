@@ -8,8 +8,7 @@ import java.nio.ByteOrder
 // TODO: Review / 1000 from flutter site
 object SetTimeStampCmd {
     fun send(epochTime: Long, handler: DeviceHandler) {
-        // Divide by 1000 to convert from milliseconds to seconds
-        val epochTimeBytes = formatEpochTime(epochTime / 1000)
+        val epochTimeBytes = formatEpochTime(epochTime)
         val builder = CommandBuilder.build(CommandCode.PACKET_CMD_TIMESTAMP_SET, epochTimeBytes)
 
         handler.write(builder)

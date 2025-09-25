@@ -12,10 +12,8 @@ class ImuEntity extends Table {
   IntColumn get gyrosY => integer()();
   IntColumn get gyrosZ => integer()();
 
-  RealColumn get roll => real()();
-  RealColumn get pitch => real()();
-  RealColumn get yaw => real()();
+  IntColumn get msgIndex => integer()();
 
   @override
-  Set<Column> get primaryKey => {time};
+  Set<Column> get primaryKey => {deviceAddress, time};
 }

@@ -7,6 +7,7 @@ class Magnetic {
   final int x;
   final int y;
   final int z;
+  final int msgIndex;
 
   Magnetic({
     required this.address,
@@ -14,6 +15,7 @@ class Magnetic {
     required this.x,
     required this.y,
     required this.z,
+    required this.msgIndex,
   });
 
   static DateTime? _timeView;
@@ -22,9 +24,11 @@ class Magnetic {
   static List<Magnetic> _generateMagneticList(dynamic map, DateTime initialTime, bool isView) {
     List<Magnetic> magneticList = [];
     DateTime? lastTime = isView ? _timeView : _timeSave;
+    DateTime epoch = DateTime.fromMillisecondsSinceEpoch(map['epoch']);
+    final int msgIndex = map['msgIndex'] ?? 0;
 
     for (var i = 0; i < map['x'].length; i++) {
-      lastTime = (lastTime ?? initialTime).add(const Duration(milliseconds: BleConstant.magneticSampleCycle));
+      lastTime = epoch.add(Duration(milliseconds: BleConstant.magneticSampleCycle * i));
       lastTime = DateTime(lastTime.year, lastTime.month, lastTime.day, lastTime.hour, lastTime.minute, lastTime.second, lastTime.millisecond);
 
       magneticList.add(Magnetic(
@@ -33,6 +37,7 @@ class Magnetic {
         x: map['x'][i],
         y: map['y'][i],
         z: map['z'][i],
+        msgIndex: msgIndex,
       ));
     }
 
@@ -65,6 +70,7 @@ class Magnetic {
       x: x,
       y: y,
       z: z,
+      msgIndex: msgIndex,
     );
   }
 }

@@ -37,7 +37,36 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 4;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          // Drop the old table and recreate it without roll, pitch, yaw columns
+          await m.deleteTable('imu_entity');
+          await m.createTable(imuEntity);
+        }
+        if (from < 3) {
+          // Add msgIndex columns to imu_entity and magnetic_entity tables with default value
+          await m.database.executor.runCustom('ALTER TABLE imu_entity ADD COLUMN msgIndex INTEGER NOT NULL DEFAULT 0');
+          await m.database.executor.runCustom('ALTER TABLE magnetic_entity ADD COLUMN msgIndex INTEGER NOT NULL DEFAULT 0');
+        }
+        if (from < 4) {
+          // Fix primary key to include deviceAddress for both IMU and Magnetic tables
+          // This requires recreating the tables with the new primary key
+          await m.deleteTable('imu_entity');
+          await m.createTable(imuEntity);
+          await m.deleteTable('magnetic_entity');
+          await m.createTable(magneticEntity);
+        }
+      },
+    );
+  }
 }
 
 DatabaseConnection createDriftIsolateAndConnect() {

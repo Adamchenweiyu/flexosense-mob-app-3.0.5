@@ -156,6 +156,7 @@ class DeviceCorePlugin {
     required DateTime timeStamp,
   }) async {
     try {
+      print('setTimeStamp: ${timeStamp.millisecondsSinceEpoch}');
       final result = await _methodChannel.invokeMethod(MethodEnum.setTimeStamp.value, [address, timeStamp.millisecondsSinceEpoch]);
       return Future.value(result);
     } catch (error) {

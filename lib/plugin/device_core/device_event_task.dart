@@ -9,7 +9,7 @@ import 'package:flex_sense/plugin/device_core/models/imu/gyros.dart';
 import 'package:flex_sense/plugin/device_core/models/imu/imu.dart';
 import 'package:flex_sense/plugin/device_core/models/magnetic.dart';
 import 'package:flex_sense/plugin/device_core/models/pressure.dart';
-import 'package:flex_sense/plugin/device_core/models/imu/roll_pitch_yaw.dart';
+
 import 'package:flex_sense/plugin/device_core/models/timestamp.dart';
 
 class DeviceEventTask {
@@ -64,9 +64,7 @@ class DeviceEventTask {
     return Magnetic.fromMapToMagneticListSave(data, time);
   }
 
-  List<RollPitchYaw> toRollPitchYawList() {
-    return RollPitchYaw.fromMapToRollPitchYawList(data);
-  }
+
 
   Pressure toPressure() {
     return Pressure.fromRawValue(data);

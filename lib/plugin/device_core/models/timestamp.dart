@@ -7,7 +7,7 @@ class TimeStamp {
 
   static TimeStamp fromMap(dynamic map) {
     final epoch = map['epoch'] as int;
-    final time = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+    final time = DateTime.fromMillisecondsSinceEpoch(epoch);
     return TimeStamp(time: time);
   }
 }
